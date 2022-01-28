@@ -29,7 +29,7 @@ public class FunctionLibrary {
 			driver.manage().window().maximize();
 
 		} else if (propertyFileUtil.getValueForKey("Browser").equalsIgnoreCase("Firefox")) {
-			System.setProperty("webdriver.gecko.driver", " ");
+			System.setProperty("webdriver.gecko.driver", "./CommonDrivers\\geckodriver.exe ");
 			driver = new FirefoxDriver();
 			driver.manage().deleteAllCookies();
 		} else {
@@ -116,7 +116,7 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 	//method for close browser
 	public static void closeBrowser(WebDriver driver)
 	{
-		driver.quit();
+		//driver.quit();
 	}
 
 
