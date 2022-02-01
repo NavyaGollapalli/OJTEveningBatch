@@ -2,11 +2,18 @@ package CommonFunctions;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -118,6 +125,48 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 	{
 		//driver.quit();
 	}
+	
+	//method for capture data into notepad
+	public static void captureData(WebDriver driver,String locatortype, String locatorvalue) throws Throwable
+	{
+		String suppliernumber="";
+		if(locatortype.equalsIgnoreCase("name"))
+		{
+			suppliernumber = driver.findElement(By.name(locatorvalue)).getAttribute("value");	
+		}
+		else if(locatortype.equalsIgnoreCase("id"))
+			{
+				
+				suppliernumber = driver.findElement(By.id(locatorvalue)).getAttribute("value");
+			}
+		
+	FileWriter fw = new FileWriter("./CaptureData/supplier.txt");
+	BufferedWriter bw = new BufferedWriter(fw);
+	bw.write(suppliernumber);
+	bw.flush();
+	bw.close();
+	}
 
+	public static void suppliertable(WebDriver driver,String testdata) throws Throwable
+	{
+		FileReader fr = new FileReader("./CaptureData/supplier.txt");
+		BufferedReader br = new BufferedReader(fr);
+		String expectednumber = br.readLine();
+		int colNum = Integer.parseInt(testdata);
+		if(!driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox"))).isDisplayed())
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-panel"))).click();
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox"))).clear();
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey(""))).sendKeys(expectednumber);
+		 Thread.sleep(5000);
+		WebElement table = driver.findElement(By.xpath(propertyFileUtil.getValueForKey("web-table")));
+		List<WebElement> rows = table.findElements(By.tagName("tr"));
+		for(int i=1; i<rows.size(); i++)
+		{
+			String actualnumber = driver.findElement(By.xpath("//table[@id='tbl_a_supplierslist']/tbody/tr["+i+"]/td["+colNum+"]/div/span/span")).getText();
+			Assert.assertEquals(actualnumber, expectednumber,"Supplier number is Not matching");
+			System.out.println(actualnumber+" "+expectednumber);
+			break;
+		}
+	}
 
 }
