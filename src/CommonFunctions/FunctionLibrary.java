@@ -126,7 +126,7 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 		//driver.quit();
 	}
 	
-	//method for capture data into notepad
+	//method for capture supplier data into notepad
 	public static void captureData(WebDriver driver,String locatortype, String locatorvalue) throws Throwable
 	{
 		String suppliernumber="";
@@ -147,6 +147,7 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 	bw.close();
 	}
 
+	//method for supplier table
 	public static void suppliertable(WebDriver driver,String testdata) throws Throwable
 	{
 		FileReader fr = new FileReader("./CaptureData/supplier.txt");
@@ -156,7 +157,8 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 		if(!driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox"))).isDisplayed())
 		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-panel"))).click();
 		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox"))).clear();
-		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey(""))).sendKeys(expectednumber);
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox"))).sendKeys(expectednumber);
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-button"))).click();
 		 Thread.sleep(5000);
 		WebElement table = driver.findElement(By.xpath(propertyFileUtil.getValueForKey("web-table")));
 		List<WebElement> rows = table.findElements(By.tagName("tr"));
@@ -167,6 +169,55 @@ else if(locatorvalue.equalsIgnoreCase("id"))
 			System.out.println(actualnumber+" "+expectednumber);
 			break;
 		}
+	}
+	
+	//method for capture customer data into notepad
+		public static void captureCustomerData(WebDriver driver,String locatortype, String locatorvalue) throws Throwable
+		{
+			String customernumber="";
+			if(locatortype.equalsIgnoreCase("name"))
+			{
+				customernumber = driver.findElement(By.name(locatorvalue)).getAttribute("value");	
+			}
+			else if(locatortype.equalsIgnoreCase("id"))
+				{
+					
+					customernumber = driver.findElement(By.id(locatorvalue)).getAttribute("value");
+				}
+			
+		FileWriter fw = new FileWriter("./CaptureData/customer.txt");
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write(customernumber);
+		bw.flush();
+		bw.close();
+		}
+
+	
+	//method for customer table
+	public static void customerTable(WebDriver driver,String testdata) throws Throwable
+	{
+		FileReader fr = new FileReader("./CaptureData/customer.txt");
+		BufferedReader br = new BufferedReader(fr);
+		String expectednumber = br.readLine();
+		int colNum = Integer.parseInt(testdata);
+		if(!driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox-customer"))).isDisplayed())
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-panel-customer"))).click();
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox-customer"))).clear();
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-textbox-customer"))).sendKeys(expectednumber);
+		 driver.findElement(By.xpath(propertyFileUtil.getValueForKey("search-button-customer"))).click();
+		 Thread.sleep(5000);
+		 WebElement table = driver.findElement(By.xpath(propertyFileUtil.getValueForKey("web-table-customer")));
+			List<WebElement> rows = table.findElements(By.tagName("tr"));
+			for(int i=1; i<rows.size(); i++)
+			{
+				String actualnumber = driver.findElement(By.xpath("//table[@id='tbl_a_customerslist']/tbody/tr["+i+"]/td["+colNum+"]/div/span/span")).getText();
+				Assert.assertEquals(actualnumber, expectednumber,"Customer number is Not matching");
+				System.out.println(actualnumber+" "+expectednumber);
+				break;
+			}
+
+		 
+		
 	}
 
 }

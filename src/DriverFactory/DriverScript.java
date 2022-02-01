@@ -74,6 +74,14 @@ public class DriverScript {
 						{
 							FunctionLibrary.suppliertable(driver, TestData);
 						}
+						else if(FunctionName.equalsIgnoreCase("captureCustomerData"))
+						{
+							FunctionLibrary.captureCustomerData(driver, LocatorType, LocatorValue);
+						}
+						else if(FunctionName.equalsIgnoreCase("customerTable"))
+						{
+							FunctionLibrary.customerTable(driver, TestData);
+						}
 					//write as pass into status cell in TCModule
 						xl.setCellData(TCModule, j, 5, "pass", outputpath);
 						moduleStatus = "True";
